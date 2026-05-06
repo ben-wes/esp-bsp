@@ -72,7 +72,8 @@ static void audio_task(void *arg) {
     int btn_index = 0;
     if (xQueueReceive(audio_button_q, &btn_index, portMAX_DELAY) == pdTRUE) {
       switch (btn_index) {
-      case BSP_BUTTON_REC: {
+      // case BSP_BUTTON_REC: {
+      case BSP_BUTTON_VOLDOWN: {
         if (mic_codec_dev == NULL) {
           ESP_LOGW(TAG, "This board does not support microphone recording!");
           break;
@@ -124,7 +125,8 @@ static void audio_task(void *arg) {
         esp_codec_dev_close(mic_codec_dev);
         break;
       }
-      case BSP_BUTTON_SET: {
+      // case BSP_BUTTON_SET: {
+      case BSP_BUTTON_VOLUP: {
         static bool play_recording = true;
 
         /* Switch between saved and recorded wav file */
@@ -179,7 +181,8 @@ static void audio_task(void *arg) {
         esp_codec_dev_close(spk_codec_dev);
         break;
       }
-      case BSP_BUTTON_VOLDOWN: {
+      // case BSP_BUTTON_VOLDOWN: {
+      case BSP_BUTTON_REC: {
         int vol;
         esp_codec_dev_get_out_vol(spk_codec_dev, &vol);
         vol = (vol - 5 < 0) ? 0 : vol - 5;
@@ -187,7 +190,8 @@ static void audio_task(void *arg) {
         ESP_LOGI(TAG, "Volume Down: %i", vol);
         break;
       }
-      case BSP_BUTTON_VOLUP: {
+      // case BSP_BUTTON_VOLUP: {
+      case BSP_BUTTON_SET: {
         int vol;
         esp_codec_dev_get_out_vol(spk_codec_dev, &vol);
         vol = (vol + 5 > 100) ? 100 : vol + 5;
