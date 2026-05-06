@@ -1,0 +1,57 @@
+version: "1.0.0"
+description: Board Support Package (BSP) for Waveshare ESP32-S3-AUDIO-Board
+url: https://github.com/espressif/esp-bsp/tree/master/bsp/waveshare_esp32_s3_audio
+
+targets:
+  - esp32s3
+
+tags:
+  - bsp
+
+dependencies:
+  idf: ">=5.4"
+
+  esp_codec_dev:
+    version: "~1.5"
+    public: true
+
+  espressif/esp_io_expander_tca95xx_16bit:
+    version: "*"
+    public: true
+    override_path: "../../components/io_expander/esp_io_expander_tca95xx_16bit"
+
+  espressif/esp_lvgl_port:
+    version: "^2"
+    public: true
+    override_path: "../../components/esp_lvgl_port"
+
+  espressif/esp_lcd_ili9341:
+    version: "*"
+    public: false
+    override_path: "../../components/lcd/esp_lcd_ili9341"
+
+  espressif/esp_lcd_touch_gt911:
+    version: "*"
+    public: false
+    override_path: "../../components/lcd_touch/esp_lcd_touch_gt911"
+
+  espressif/esp_lcd_touch_tt21100:
+    version: "*"
+    public: false
+    override_path: "../../components/lcd_touch/esp_lcd_touch_tt21100"
+
+  esp_video:
+    version: "~2.0"
+    public: true
+
+  button:
+    version: "^4"
+    public: true
+
+  led_indicator:
+    version: "^2"
+    public: true
+
+examples:
+  - path: ../../examples/audio
+  - path: ../../examples/display

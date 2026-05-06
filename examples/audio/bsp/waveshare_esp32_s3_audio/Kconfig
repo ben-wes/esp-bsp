@@ -1,0 +1,105 @@
+menu "Board Support Package"
+
+    config BSP_ERROR_CHECK
+        bool "Enable error check in BSP"
+        default y
+        help
+            Error check assert the error code and abort the program in case of error.
+            Disable this option to save binary size and use return values instead.
+
+    menu "I2C"
+        config BSP_I2C_NUM
+            int "I2C peripheral index"
+            default 1
+            range 0 1
+            help
+                ESP32-S3 has two I2C peripherals, pick the one you want to use.
+
+    endmenu
+
+    menu "SPIFFS - Virtual File System"
+        config BSP_SPIFFS_FORMAT_ON_MOUNT_FAIL
+            bool "Format SPIFFS if mounting fails"
+            default n
+            help
+                Format SPIFFS partition if it fails to mount.
+
+        config BSP_SPIFFS_MOUNT_POINT
+            string "SPIFFS mount point"
+            default "/spiffs"
+            help
+                Mount point of SPIFFS in the virtual file system.
+
+        config BSP_SPIFFS_PARTITION_LABEL
+            string "Partition label of SPIFFS"
+            default "storage"
+            help
+                Partition label which stores SPIFFS.
+
+        config BSP_SPIFFS_MAX_FILES
+            int "Max files supported for SPIFFS"
+            default 5
+            help
+                Supported max number of files for SPIFFS.
+    endmenu
+
+    menu "SD card"
+        config BSP_SD_FORMAT_ON_MOUNT_FAIL
+            bool "Format SD card if mounting fails"
+            default n
+            help
+                The SDMMC host will format (FAT) the SD card if it fails to mount.
+
+        config BSP_SD_MOUNT_POINT
+            string "SD card mount point"
+            default "/sdcard"
+            help
+                Mount point of the SD card in the virtual file system.
+    endmenu
+
+    menu "Display"
+        config BSP_DISPLAY_BRIGHTNESS_LEDC_CH
+            int "LEDC channel index for brightness control"
+            default 1
+            range 0 7
+            help
+                LEDC channel used for backlight brightness control.
+
+        config BSP_LCD_DRAW_BUF_HEIGHT
+            int "LCD draw buffer height"
+            default 100
+            help
+                Height of LCD draw buffer in pixels.
+
+        config BSP_LCD_DRAW_BUF_DOUBLE
+            bool "LCD double draw buffer"
+            default n
+            help
+                Use double draw buffer for LCD.
+
+        config BSP_DISPLAY_LVGL_AVOID_TEAR
+            bool "Avoid tearing effect"
+            default n
+            help
+                Avoid tearing effect by using double buffering.
+    endmenu
+
+    menu "Camera"
+        config BSP_CAMERA_XCLK_LEDC_CH
+            int "LEDC channel for camera XCLK"
+            default 0
+            range 0 7
+            help
+                LEDC channel used for camera XCLK generation.
+    endmenu
+
+    menu "I2S"
+        config BSP_I2S_NUM
+            int "I2S peripheral index"
+            default 0
+            range 0 1
+            help
+                ESP32-S3 has two I2S peripherals. Pick the one you want to use.
+    endmenu
+
+endmenu
