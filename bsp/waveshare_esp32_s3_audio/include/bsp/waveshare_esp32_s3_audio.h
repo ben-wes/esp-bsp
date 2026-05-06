@@ -73,8 +73,8 @@
 #define BSP_I2S_MCLK         (GPIO_NUM_12)
 #define BSP_I2S_SCLK         (GPIO_NUM_13)
 #define BSP_I2S_LCLK         (GPIO_NUM_14)
-#define BSP_I2S_DOUT         (GPIO_NUM_15)
-#define BSP_I2S_DSIN         (GPIO_NUM_16)
+#define BSP_I2S_DOUT         (GPIO_NUM_16)
+#define BSP_I2S_DSIN         (GPIO_NUM_15)
 #define BSP_POWER_AMP_IO     (GPIO_NUM_MAX + 8)  /* TCA9555 EXIO8 */
 /** @} */
 

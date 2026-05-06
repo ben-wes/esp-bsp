@@ -51,6 +51,36 @@ static const button_gpio_config_t bsp_button_config[BSP_BUTTON_NUM] = {
     },
 };
 
+typedef struct {
+    button_driver_t base;
+    int32_t gpio_num;
+    uint8_t active_level;
+} button_exio_obj_t;
+
+static uint8_t button_exio_get_key_level(button_driver_t *button_driver)
+{
+    button_exio_obj_t *gpio_btn = __containerof(button_driver, button_exio_obj_t, base);
+    return gpio_get_level(gpio_btn->gpio_num) == gpio_btn->active_level ? 1 : 0;
+}
+
+static esp_err_t button_exio_del(button_driver_t *button_driver)
+{
+    button_exio_obj_t *gpio_btn = __containerof(button_driver, button_exio_obj_t, base);
+    free(gpio_btn);
+    return ESP_OK;
+}
+
+static uint8_t button_dummy_get_key_level(button_driver_t *button_driver)
+{
+    return 0; // Never pressed
+}
+
+static esp_err_t button_dummy_del(button_driver_t *button_driver)
+{
+    free(button_driver);
+    return ESP_OK;
+}
+
 esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int btn_array_size)
 {
     /* Initialize IO expander first (buttons are on TCA9555) */
@@ -67,9 +97,25 @@ esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int b
         *btn_cnt = 0;
     }
     for (int i = 0; i < BSP_BUTTON_NUM; i++) {
-        ret |= iot_button_new_gpio_device(&btn_config, &bsp_button_config[i], &btn_array[i]);
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to create button %d", i);
+        if (bsp_button_config[i].gpio_num >= 0) {
+            button_exio_obj_t *gpio_btn = calloc(1, sizeof(button_exio_obj_t));
+            if (!gpio_btn) return ESP_ERR_NO_MEM;
+            gpio_btn->gpio_num = bsp_button_config[i].gpio_num;
+            gpio_btn->active_level = bsp_button_config[i].active_level;
+            gpio_btn->base.get_key_level = button_exio_get_key_level;
+            gpio_btn->base.del = button_exio_del;
+
+            // TCA9555 has internal pull-ups, no need to configure pull mode
+            gpio_set_direction(gpio_btn->gpio_num, GPIO_MODE_INPUT);
+
+            ret |= iot_button_create(&btn_config, &gpio_btn->base, &btn_array[i]);
+        } else {
+            // Create a dummy button
+            button_driver_t *dummy_btn = calloc(1, sizeof(button_driver_t));
+            if (!dummy_btn) return ESP_ERR_NO_MEM;
+            dummy_btn->get_key_level = button_dummy_get_key_level;
+            dummy_btn->del = button_dummy_del;
+            ret |= iot_button_create(&btn_config, dummy_btn, &btn_array[i]);
         }
         if (btn_cnt) {
             (*btn_cnt)++;
