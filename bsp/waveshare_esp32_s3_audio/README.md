@@ -1,44 +1,47 @@
-# BSP: ESP32-S3-Korvo-2
+# BSP: WAVESHARE ESP32-S3-AUDIO
+*(adapted from esp32s3korvo2)*
 
-| [HW Reference](https://espressif-docs.readthedocs-hosted.com/projects/esp-adf/en/latest/design-guide/dev-boards/user-guide-esp32-s3-korvo-2.html) | [HOW TO USE API](API.md) | [EXAMPLES](#compatible-bsp-examples) | [![Component Registry](https://components.espressif.com/components/espressif/esp32_s3_korvo_2/badge.svg)](https://components.espressif.com/components/espressif/esp32_s3_korvo_2) | ![maintenance-status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg) |
-| --- | --- | --- | --- | -- |
+## ISSUES
+1. What to do with LEDs? Is it a good idea to make a component like neopixel? Or just address them as they are? In the board definition they are defined as a strip, not as individual leds.
+2. Camera and display are untested (and will probably stay that way).
+3. Expansion header is untested.
+4. There are two buttons that were present in the korvo2 that are not present in this one. 'bsp_button.c' is modified and has 2 dummy button definitions. 
+5. We might need to add more examples in order to debug different features.
 
 ## Overview
 
-<table>
+<table> 
 <tr><td>
 
-The ESP32-S3-Korvo-2 is a multimedia development board based on the ESP32-S3 chip. It is equipped with a two-microphone array which is suitable for voice recognition and near/far-field voice wake-up applications. The board integrates multiple peripherals such as LCD, camera, and microSD card. It also supports JPEG video stream processing. With all of its outstanding features, the board is an ideal choice for the development of low-cost and low-power network-connected audio and video products.
+The Waveshare ESP32-S3-AUDIO is based on the ESP32-S3 with 2.4GHz Wi-Fi and Bluetooth 5 (LE) support, integrates high-capacity Flash and PSRAM, built-in dual microphones, speaker, surround RGB LEDs, onboard multiple interfaces. It enables the rapid development of smart devices such as AI speakers, voice interaction systems, HMI screens and camera applications.
 
 </td><td width="200">
-  <img src="doc/esp32_s3_korvo_2.webp">
+  <img src="doc/waveshare_esp32_s3_audio.jpeg">
 </td></tr>
 </table>
 
-> **_NOTE:_** Compatible with V3.0 a V3.1 boards.
 
-![image](doc/pic.png)
+![image](doc/pic.jpeg)
 
 ## Capabilities and dependencies
 
 <div align="center">
 <!-- START_DEPENDENCIES -->
 
-|     Available    |       Capability       |Controller/Codec|                                                                                                          Component                                                                                                          |   Version  |
-|------------------|------------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-|:heavy_check_mark:|     :pager: DISPLAY    |     ili9341    |                                                          idf<br/>[espressif/esp_lcd_ili9341](https://components.espressif.com/components/espressif/esp_lcd_ili9341)                                                         | >=5.4<br/>*|
-|:heavy_check_mark:|:black_circle: LVGL_PORT|                |                                                                [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)                                                               |     ^2     |
-|:heavy_check_mark:|    :point_up: TOUCH    | gt911, tt21100 |[espressif/esp_lcd_touch_gt911](https://components.espressif.com/components/espressif/esp_lcd_touch_gt911)<br/>[espressif/esp_lcd_touch_tt21100](https://components.espressif.com/components/espressif/esp_lcd_touch_tt21100)|   *<br/>*  |
-|:heavy_check_mark:| :radio_button: BUTTONS |                |                                                                       [espressif/button](https://components.espressif.com/components/espressif/button)                                                                      |     ^4     |
-|        :x:       |   :white_circle: KNOB  |                |                                                                                                                                                                                                                             |            |
-|:heavy_check_mark:|  :musical_note: AUDIO  |                |                                                                [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)                                                               |    ~1.5    |
-|:heavy_check_mark:| :speaker: AUDIO_SPEAKER|     es8311     |                                                                                                                                                                                                                             |            |
-|:heavy_check_mark:| :microphone: AUDIO_MIC |     es7210     |                                                                                                                                                                                                                             |            |
-|:heavy_check_mark:|  :floppy_disk: SDCARD  |                |                                                                                                             idf                                                                                                             |    >=5.4   |
-|:heavy_check_mark:|       :bulb: LED       |                |                                                            idf<br/>[espressif/led_indicator](https://components.espressif.com/components/espressif/led_indicator)                                                           |>=5.4<br/>^2|
-|:heavy_check_mark:|     :camera: CAMERA    |     OV3660     |                                                                    [espressif/esp_video](https://components.espressif.com/components/espressif/esp_video)                                                                   |    ~2.0    |
-|:heavy_check_mark:|      :battery: BAT     |                |                                                                                                             idf                                                                                                             |    >=5.4   |
-|        :x:       |    :video_game: IMU    |                |                                                                                                                                                                                                                             |            |
+1. High-performance MCU: Adopts ESP32-S3R8 module with Xtensa 32-bit LX7 dual-core processor, up to 240MHz main frequency
+2. Wireless Connectivity: Supports 2.4GHz Wi-Fi (802.11 b/g/n) and Bluetooth 5 (LE), with onboard antenna
+3. Storage Resources: Integrated 512KB SRAM, 384KB ROM, 8MB PSRAM, and external 16MB Flash memory
+4. Voice Interaction: Dual microphone array with noise reduction and echo cancellation, suitable for accurate speech recognition and near/far-field wake-up
+5. Clock Management: Integrated PCF85063 RTC chip, supports power-off time retention for alarm, scheduled task, and wake-up functions
+6. Colorful Lighting Effects: Onboard 7x surround RGB LEDs, programmable for a variety of dynamic effects
+7. HMI Interfaces: Multiple reserved buttons and battery switch for customized function development
+8. Expansion Interfaces:
+    * SPI LCD display interface (FPC connector / pin header)
+    * DVP camera interface (24pin connector)
+    * USB, I2C, and some I/O pins (compatible with display interface I/O pins)
+9. Multimedia Features: Onboard audio decoding chip, dual microphones and speaker header
+10. Storage Expansion: Onboard TF card slot for storing audio files, etc.
+11. Power Management: Built-in battery recharge management module, supports multiple power modes and low-power applications
 
 <!-- END_DEPENDENCIES -->
 </div>
@@ -50,15 +53,7 @@ The ESP32-S3-Korvo-2 is a multimedia development board based on the ESP32-S3 chi
 
 | Example | Description | Try with ESP Launchpad |
 | ------- | ----------- | ---------------------- |
-| [Audio Example](https://github.com/espressif/esp-bsp/tree/master/examples/audio) | Play and record WAV file | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=audio-) |
-| [Display Example](https://github.com/espressif/esp-bsp/tree/master/examples/display) | Show an image on the screen with a simple startup animation (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display-) |
-| [Display, Audio and Photo Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_audio_photo) | Complex demo: browse files from filesystem and play/display JPEG, WAV, or TXT files (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_audio_photo-) |
-| [Camera Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_camera_video) | Stream camera output to display (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_camera_video) |
-| [LVGL Benchmark Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_benchmark) | Run LVGL benchmark tests | - |
-| [LVGL Demos Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_demos) | Run the LVGL demo player - all LVGL examples are included (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_lvgl_demos-) |
-| [Display Rotation Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_rotation) | Rotate screen using buttons or an accelerometer (`BSP_CAPS_IMU`, if available) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_rotation-) |
-| [Display SD card Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_sdcard) | Example of mounting an SD card using SD-MMC/SPI with display interaction. This example is also supported on boards without a display. | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_sdcard) |
-
+| [Audio Example](https://github.com/espressif/esp-bsp/tree/master/examples/audio) | Play and record WAV file | 
 <!-- END_EXAMPLES -->
 </div>
 
