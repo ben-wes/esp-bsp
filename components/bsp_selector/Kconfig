@@ -102,6 +102,11 @@ menu "BSP Selector"
         default 1 if BSP_SELECT_ESP_VOCAT
         default 0
 
+    config WAVESHARE_ESP32_S3_AUDIO
+        int
+        default 1 if BSP_SELECT_WAVESHARE_ESP32_S3_AUDIO
+        default 0
+
     config BSP_SELECT_GLIB_SEL
         int
         default 1 if BSP_SELECT_GLIB
@@ -203,6 +208,10 @@ menu "BSP Selector"
         config BSP_SELECT_ESP_VOCAT
             depends on IDF_TARGET_ESP32S3
             bool "ESP_VOCAT"
+
+        config BSP_SELECT_WAVESHARE_ESP32_S3_AUDIO
+            depends on IDF_TARGET_ESP32S3
+            bool "WAVESHARE_ESP32_S3_AUDIO"
 
    endchoice
 

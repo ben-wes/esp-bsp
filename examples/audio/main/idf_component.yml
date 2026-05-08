@@ -1,5 +1,5 @@
 description: BSP Audio example
 
 dependencies:
-  waveshare_esp32_s3_audio:
-    override_path: ../../../bsp/waveshare_esp32_s3_audio
+  bsp_selector:
+    override_path: ../../../components/bsp_selector

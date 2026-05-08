@@ -232,5 +232,12 @@ dependencies:
     matches:
       - if: $CONFIG{ESP_VOCAT} == 1 && $CONFIG{BSP_SELECT_GLIB_SEL} != 1
 
+  waveshare_esp32_s3_audio:
+    version: "*"
+    public: true
+    override_path: "../../bsp/waveshare_esp32_s3_audio"
+    matches:
+      - if: $CONFIG{WAVESHARE_ESP32_S3_AUDIO} == 1
+
 examples:
   - path: ../../examples/display
