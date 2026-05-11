@@ -16,6 +16,7 @@
 
 #pragma once
 #include "esp_lcd_types.h"
+#include "esp_err.h"
 
 /** \addtogroup g04_display
  *  @{

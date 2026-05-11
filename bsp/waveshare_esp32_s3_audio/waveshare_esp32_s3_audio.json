@@ -327,6 +327,12 @@
             "version": "^2",
             "public": "true",
             "min_idf": "5.0"
+        },
+        {
+            "name": "ws2812_strip",
+            "version": "*",
+            "public": "true",
+            "min_idf": "0"
         }
     ],
     "BSP_REQUIRES": [

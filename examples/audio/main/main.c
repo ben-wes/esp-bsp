@@ -39,6 +39,8 @@
 static const char *TAG = "example";
 static QueueHandle_t audio_button_q = NULL;
 
+static ws2812_strip_handle_t strip = NULL;
+
 static void btn_handler(void *button_handle, void *usr_data) {
   int button_pressed = (int)usr_data;
   xQueueSend(audio_button_q, &button_pressed, 0);
@@ -74,6 +76,8 @@ static void audio_task(void *arg) {
       switch (btn_index) {
       // case BSP_BUTTON_REC: {
       case BSP_BUTTON_VOLDOWN: {
+        ws2812_strip_fill(strip, WS2812_COLOR_RED);
+        ws2812_strip_refresh(strip);
         if (mic_codec_dev == NULL) {
           ESP_LOGW(TAG, "This board does not support microphone recording!");
           break;
@@ -127,6 +131,8 @@ static void audio_task(void *arg) {
       }
       // case BSP_BUTTON_SET: {
       case BSP_BUTTON_VOLUP: {
+        ws2812_strip_fill(strip, WS2812_COLOR_BLUE);
+        ws2812_strip_refresh(strip);
         static bool play_recording = true;
 
         /* Switch between saved and recorded wav file */
@@ -136,6 +142,9 @@ static void audio_task(void *arg) {
         break;
       }
       case BSP_BUTTON_PLAY: {
+        ws2812_strip_fill(strip, WS2812_COLOR_GREEN);
+        ws2812_strip_refresh(strip);
+
         int16_t *wav_bytes = malloc(BUFFER_SIZE);
         assert(wav_bytes != NULL);
 
@@ -212,6 +221,8 @@ void app_main(void) {
   gpio_set_direction(BOARD_PA_EN_PIN, GPIO_MODE_OUTPUT);
   gpio_set_level(BOARD_PA_EN_PIN, 1); // 1 = Encendido
   ESP_ERROR_CHECK(bsp_spiffs_mount());
+  ESP_ERROR_CHECK(bsp_led_strip_init());
+  strip = bsp_led_strip_get_handle();
 
   /* Create FreeRTOS tasks and queues */
   audio_button_q = xQueueCreate(10, sizeof(int));

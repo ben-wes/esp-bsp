@@ -1,0 +1,11 @@
+
+version: "1.0.0"
+description: WS2812/NeoPixel LED strip driver for ESP-IDF. Supports per-pixel RGB/HSV control, fill, brightness scaling, and range operations.
+url: https://github.com/espressif/esp-bsp
+issues: https://github.com/espressif/esp-bsp/issues
+license: Apache-2.0
+ 
+dependencies:
+  idf: ">=5.0.0"
+  espressif/led_strip: ">=2.0.0"
+ 
