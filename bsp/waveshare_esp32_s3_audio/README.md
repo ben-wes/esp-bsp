@@ -2,11 +2,11 @@
 *(adapted from esp32s3korvo2)*
 
 ## ISSUES
-1. What to do with LEDs? Is it a good idea to make a component like neopixel? Or just address them as they are? In the board definition they are defined as a strip, not as individual leds.
+1. What to do with LEDs? Is it a good idea to make a component like neopixel? Or just address them as they are? In the board definition they are defined as a strip, not as individual leds. As they are now the won't work with the api (I think).
 2. Camera and display are untested (and will probably stay that way).
-3. Expansion header is untested.
-4. There are two buttons that were present in the korvo2 that are not present in this one. 'bsp_button.c' is modified and has 2 dummy button definitions. 
-5. We might need to add more examples in order to debug different features.
+3. Exposed pins seem to work. Three of them go through the tca9555, most of them are duplicates from the display. Might be worth to disable features like camera, display or touch if there isn't a plan to implement them. Also might be worth to get an adapter from the camera connector to dupont pins to get more exposed pins.
+4. Built-in buttons go through the tca9555, unlike in the korvo2. It's also missing two buttons. Code works but I don't know if it's okay.
+5. We might need to add more examples in order to test and debug different features (for now just exposed pins, i2c modules and maybe leds).
 
 ## Overview
 
