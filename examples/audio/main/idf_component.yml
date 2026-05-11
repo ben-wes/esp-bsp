@@ -4,5 +4,3 @@ dependencies:
   bsp_selector:
     override_path: ../../../components/bsp_selector
 
-  ws2812_strip:
-    override_path: ../../../components/ws2812_strip

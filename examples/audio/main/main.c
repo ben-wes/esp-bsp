@@ -122,6 +122,9 @@ static void audio_task(void *arg) {
           bytes_written_to_spiffs += data_written;
         }
 
+        ws2812_strip_clear(strip);
+        ws2812_strip_refresh(strip);
+
         ESP_LOGI(TAG, "Recording stop, length: %i bytes",
                  bytes_written_to_spiffs);
         fclose(record_file);
@@ -138,6 +141,10 @@ static void audio_task(void *arg) {
         /* Switch between saved and recorded wav file */
         play_filename = play_recording ? recording_filename : music_filename;
         play_recording = !play_recording;
+
+        ws2812_strip_clear(strip);
+        ws2812_strip_refresh(strip);
+
         ESP_LOGI(TAG, "Playback file changed to %s", play_filename);
         break;
       }
@@ -185,6 +192,10 @@ static void audio_task(void *arg) {
           esp_codec_dev_write(spk_codec_dev, wav_bytes, bytes_read_from_spiffs);
           bytes_send_to_i2s += bytes_read_from_spiffs;
         }
+
+        ws2812_strip_clear(strip);
+        ws2812_strip_refresh(strip);
+
         fclose(play_file);
         free(wav_bytes);
         esp_codec_dev_close(spk_codec_dev);
@@ -219,7 +230,7 @@ static void audio_task(void *arg) {
 void app_main(void) {
   gpio_reset_pin(BOARD_PA_EN_PIN);
   gpio_set_direction(BOARD_PA_EN_PIN, GPIO_MODE_OUTPUT);
-  gpio_set_level(BOARD_PA_EN_PIN, 1); // 1 = Encendido
+  gpio_set_level(BOARD_PA_EN_PIN, 1); //
   ESP_ERROR_CHECK(bsp_spiffs_mount());
   ESP_ERROR_CHECK(bsp_led_strip_init());
   strip = bsp_led_strip_get_handle();
