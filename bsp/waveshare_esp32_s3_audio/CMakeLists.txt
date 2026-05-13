@@ -7,6 +7,6 @@ idf_component_register(
     INCLUDE_DIRS "include"
     PRIV_INCLUDE_DIRS "priv_include"
     REQUIRES ${REQ}
-    ws2812_strip
+    led_strip
     PRIV_REQUIRES esp_psram ${PRIV_REQ}
 )

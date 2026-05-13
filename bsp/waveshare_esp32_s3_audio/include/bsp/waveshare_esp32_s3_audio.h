@@ -24,7 +24,7 @@
 #include "esp_vfs_fat.h"
 #include "iot_button.h"
 #include "sdkconfig.h"
-#include "ws2812_strip.h"
+#include "led_strip.h"
 
 #if (BSP_CONFIG_NO_GRAPHIC_LIB == 0)
 #include "esp_lvgl_port.h"
@@ -338,7 +338,7 @@ esp_err_t bsp_feature_enable(bsp_feature_t feature, bool enable);
  *
  **************************************************************************************************/
 esp_err_t bsp_led_strip_init(void);
-ws2812_strip_handle_t bsp_led_strip_get_handle(void);
+led_strip_handle_t bsp_led_strip_get_handle(void);
 
 /**************************************************************************************************
  *

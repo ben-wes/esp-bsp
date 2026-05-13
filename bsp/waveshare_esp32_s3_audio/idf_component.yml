@@ -52,10 +52,9 @@ dependencies:
     version: "^2"
     public: true
 
-  ws2812_strip:
+  led_strip:
     version: "*"
     public: true
-    override_path: "../../components/ws2812_strip"
 
 examples:
   - path: ../../examples/audio

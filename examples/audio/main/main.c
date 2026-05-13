@@ -39,7 +39,14 @@
 static const char *TAG = "example";
 static QueueHandle_t audio_button_q = NULL;
 
-static ws2812_strip_handle_t strip = NULL;
+#ifdef BSP_BOARD_WAVESHARE_ESP32_S3_AUDIO
+#define HAS_LED_STRIP 1
+#endif
+
+#ifdef HAS_LED_STRIP
+#include "led_strip.h"
+static led_strip_handle_t strip = NULL;
+#endif
 
 static void btn_handler(void *button_handle, void *usr_data) {
   int button_pressed = (int)usr_data;
@@ -76,8 +83,12 @@ static void audio_task(void *arg) {
       switch (btn_index) {
       // case BSP_BUTTON_REC: {
       case BSP_BUTTON_VOLDOWN: {
-        ws2812_strip_fill(strip, WS2812_COLOR_RED);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        for (int i = 0; i < 7; i++) {
+            led_strip_set_pixel(strip, i, 255, 0, 0);
+        }
+        led_strip_refresh(strip);
+#endif
         if (mic_codec_dev == NULL) {
           ESP_LOGW(TAG, "This board does not support microphone recording!");
           break;
@@ -122,8 +133,9 @@ static void audio_task(void *arg) {
           bytes_written_to_spiffs += data_written;
         }
 
-        ws2812_strip_clear(strip);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        led_strip_clear(strip);
+#endif
 
         ESP_LOGI(TAG, "Recording stop, length: %i bytes",
                  bytes_written_to_spiffs);
@@ -134,23 +146,32 @@ static void audio_task(void *arg) {
       }
       // case BSP_BUTTON_SET: {
       case BSP_BUTTON_VOLUP: {
-        ws2812_strip_fill(strip, WS2812_COLOR_BLUE);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        for (int i = 0; i < 7; i++) {
+            led_strip_set_pixel(strip, i, 0, 0, 255);
+        }
+        led_strip_refresh(strip);
+#endif
         static bool play_recording = true;
 
         /* Switch between saved and recorded wav file */
         play_filename = play_recording ? recording_filename : music_filename;
         play_recording = !play_recording;
 
-        ws2812_strip_clear(strip);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        led_strip_clear(strip);
+#endif
 
         ESP_LOGI(TAG, "Playback file changed to %s", play_filename);
         break;
       }
       case BSP_BUTTON_PLAY: {
-        ws2812_strip_fill(strip, WS2812_COLOR_GREEN);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        for (int i = 0; i < 7; i++) {
+            led_strip_set_pixel(strip, i, 0, 255, 0);
+        }
+        led_strip_refresh(strip);
+#endif
 
         int16_t *wav_bytes = malloc(BUFFER_SIZE);
         assert(wav_bytes != NULL);
@@ -193,8 +214,9 @@ static void audio_task(void *arg) {
           bytes_send_to_i2s += bytes_read_from_spiffs;
         }
 
-        ws2812_strip_clear(strip);
-        ws2812_strip_refresh(strip);
+#ifdef HAS_LED_STRIP
+        led_strip_clear(strip);
+#endif
 
         fclose(play_file);
         free(wav_bytes);
@@ -232,8 +254,10 @@ void app_main(void) {
   gpio_set_direction(BOARD_PA_EN_PIN, GPIO_MODE_OUTPUT);
   gpio_set_level(BOARD_PA_EN_PIN, 1); //
   ESP_ERROR_CHECK(bsp_spiffs_mount());
+#ifdef HAS_LED_STRIP
   ESP_ERROR_CHECK(bsp_led_strip_init());
   strip = bsp_led_strip_get_handle();
+#endif
 
   /* Create FreeRTOS tasks and queues */
   audio_button_q = xQueueCreate(10, sizeof(int));
@@ -243,6 +267,7 @@ void app_main(void) {
   assert(ret == pdPASS);
 
   /* Init audio buttons */
+#if BSP_CAPS_BUTTONS > 0
   button_handle_t btns[BSP_BUTTON_NUM];
   ESP_ERROR_CHECK(bsp_iot_button_create(btns, NULL, BSP_BUTTON_NUM));
   for (int i = 0; i < BSP_BUTTON_NUM; i++) {
@@ -254,4 +279,7 @@ void app_main(void) {
                                            btn_handler, (void *)i));
 #endif
   }
+#else
+  ESP_LOGW(TAG, "No buttons found on this board");
+#endif
 }
