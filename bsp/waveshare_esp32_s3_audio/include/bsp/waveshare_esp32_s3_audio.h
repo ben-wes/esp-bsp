@@ -76,6 +76,9 @@
 #define BSP_I2S_DOUT (GPIO_NUM_16)
 #define BSP_I2S_DSIN (GPIO_NUM_15)
 #define BSP_POWER_AMP_IO (GPIO_NUM_MAX + 8) /* TCA9555 EXIO8 */
+/** Default I2S rate for bsp_audio_init(NULL) — ES8311/ES7210 on this board. */
+#define BSP_AUDIO_SAMPLE_RATE_HZ    48000
+#define BSP_AUDIO_MCLK_MULTIPLE     256
 /** @} */
 
 /** @defgroup g04_display Display and Touch

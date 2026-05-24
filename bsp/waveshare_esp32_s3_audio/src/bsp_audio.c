@@ -27,16 +27,26 @@ static const char *TAG = "Waveshare-Audio";
         },                     \
     }
 
-/* This configuration is used by default in bsp_audio_init() */
-#define BSP_I2S_DUPLEX_CFG(_sample_rate)                                                         \
+/* Default duplex config for bsp_audio_init(NULL). */
+#define BSP_I2S_DUPLEX_CFG(_sample_rate)                                                              \
     {                                                                                                 \
         .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(_sample_rate),                                          \
-        .slot_cfg = I2S_STD_PHILIP_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_MONO), \
+        .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO), \
         .gpio_cfg = BSP_I2S_GPIO_CFG,                                                                 \
     }
+
 static i2s_chan_handle_t i2s_tx_chan = NULL;
 static i2s_chan_handle_t i2s_rx_chan = NULL;
 static const audio_codec_data_if_t *i2s_data_if = NULL;  /* Codec data interface */
+
+static esp_err_t bsp_audio_codec_bus_init(void)
+{
+    BSP_ERROR_CHECK_RETURN_ERR(bsp_i2c_init());
+    if (bsp_io_expander_init() == NULL) {
+        return ESP_FAIL;
+    }
+    return ESP_OK;
+}
 
 esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config)
 {
@@ -52,7 +62,8 @@ esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config)
     BSP_ERROR_CHECK_RETURN_ERR(i2s_new_channel(&chan_cfg, &i2s_tx_chan, &i2s_rx_chan));
 
     /* Setup I2S channels */
-    const i2s_std_config_t std_cfg_default = BSP_I2S_DUPLEX_CFG(22050);
+    i2s_std_config_t std_cfg_default = BSP_I2S_DUPLEX_CFG(BSP_AUDIO_SAMPLE_RATE_HZ);
+    std_cfg_default.clk_cfg.mclk_multiple = BSP_AUDIO_MCLK_MULTIPLE;
     const i2s_std_config_t *p_i2s_cfg = &std_cfg_default;
     if (i2s_config != NULL) {
         p_i2s_cfg = i2s_config;
@@ -94,20 +105,15 @@ const audio_codec_data_if_t *bsp_audio_get_codec_itf(void)
 
 esp_codec_dev_handle_t bsp_audio_codec_speaker_init(void)
 {
-    const audio_codec_data_if_t *i2s_data_if = bsp_audio_get_codec_itf();
-    if (i2s_data_if == NULL) {
+    const audio_codec_data_if_t *codec_itf = bsp_audio_get_codec_itf();
 
-        /* Initilize I2C */
-        BSP_ERROR_CHECK_RETURN_NULL(bsp_i2c_init());
-        /* Initialize IO Expander */
-        if (bsp_io_expander_init() == NULL) {
-            return NULL;
-        }
-        /* Configure I2S peripheral and Power Amplifier */
+    BSP_ERROR_CHECK_RETURN_NULL(bsp_audio_codec_bus_init());
+
+    if (codec_itf == NULL) {
         BSP_ERROR_CHECK_RETURN_NULL(bsp_audio_init(NULL));
-        i2s_data_if = bsp_audio_get_codec_itf();
+        codec_itf = bsp_audio_get_codec_itf();
     }
-    assert(i2s_data_if);
+    assert(codec_itf);
 
     const audio_codec_gpio_if_t *gpio_if = audio_codec_new_gpio();
 
@@ -131,7 +137,9 @@ esp_codec_dev_handle_t bsp_audio_codec_speaker_init(void)
         .pa_pin = BSP_POWER_AMP_IO,
         .pa_reverted = false,
         .master_mode = false,
+        .use_mclk = true,
         .hw_gain = gain,
+        .mclk_div = BSP_AUDIO_MCLK_MULTIPLE,
     };
     const audio_codec_if_t *dev = es8311_codec_new(&codec_cfg);
     BSP_NULL_CHECK(dev, NULL);
@@ -139,27 +147,22 @@ esp_codec_dev_handle_t bsp_audio_codec_speaker_init(void)
     esp_codec_dev_cfg_t codec_dev_cfg = {
         .dev_type = ESP_CODEC_DEV_TYPE_OUT,
         .codec_if = dev,
-        .data_if = i2s_data_if,
+        .data_if = codec_itf,
     };
     return esp_codec_dev_new(&codec_dev_cfg);
 }
 
 esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void)
 {
-    const audio_codec_data_if_t *i2s_data_if = bsp_audio_get_codec_itf();
-    if (i2s_data_if == NULL) {
+    const audio_codec_data_if_t *codec_itf = bsp_audio_get_codec_itf();
 
-        /* Initilize I2C */
-        BSP_ERROR_CHECK_RETURN_NULL(bsp_i2c_init());
-        /* Initialize IO Expander */
-        if (bsp_io_expander_init() == NULL) {
-            return NULL;
-        }
-        /* Configure I2S peripheral and Power Amplifier */
+    BSP_ERROR_CHECK_RETURN_NULL(bsp_audio_codec_bus_init());
+
+    if (codec_itf == NULL) {
         BSP_ERROR_CHECK_RETURN_NULL(bsp_audio_init(NULL));
-        i2s_data_if = bsp_audio_get_codec_itf();
+        codec_itf = bsp_audio_get_codec_itf();
     }
-    assert(i2s_data_if);
+    assert(codec_itf);
 
     audio_codec_i2c_cfg_t i2c_cfg = {
         .port = BSP_I2C_NUM,
@@ -171,6 +174,10 @@ esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void)
 
     es7210_codec_cfg_t codec_cfg = {
         .ctrl_if = i2c_ctrl_if,
+        .master_mode = false,
+        .mic_selected = ES7210_SEL_MIC1 | ES7210_SEL_MIC2,
+        .mclk_src = ES7210_MCLK_FROM_PAD,
+        .mclk_div = BSP_AUDIO_MCLK_MULTIPLE,
     };
     const audio_codec_if_t *dev = es7210_codec_new(&codec_cfg);
     BSP_NULL_CHECK(dev, NULL);
@@ -178,7 +185,7 @@ esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void)
     esp_codec_dev_cfg_t codec_dev_cfg = {
         .dev_type = ESP_CODEC_DEV_TYPE_IN,
         .codec_if = dev,
-        .data_if = i2s_data_if,
+        .data_if = codec_itf,
     };
     return esp_codec_dev_new(&codec_dev_cfg);
 }
