@@ -5,6 +5,7 @@
 
 #include "bsp/waveshare_esp32_s3_audio.h"
 #include "led_strip.h"
+#include "led_strip_types.h"
 
 static led_strip_handle_t s_strip = NULL;
 
@@ -12,8 +13,8 @@ esp_err_t bsp_led_strip_init(void) {
   led_strip_config_t strip_config = {
       .strip_gpio_num = BSP_LED_STRIP_IO,
       .max_leds = BSP_LED_STRIP_NUM,
-      //.led_pixel_format = LED_PIXEL_FORMAT_GRB,
       .led_model = LED_MODEL_WS2812,
+      .color_component_format = LED_STRIP_COLOR_COMPONENT_FMT_RGB,
       .flags.invert_out = false,
   };
   led_strip_rmt_config_t rmt_config = {
