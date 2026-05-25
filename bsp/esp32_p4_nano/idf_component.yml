@@ -52,6 +52,14 @@ dependencies:
     rules:
       - if: "idf_version >=6.0"
 
+  espressif/esp_wifi_remote:
+    version: ">=0.10,<2.0"
+    public: true
+
+  espressif/esp_hosted:
+    version: "~2"
+    public: true
+
 examples:
   - path: ../../examples/display
   - path: ../../examples/display_lvgl_demos
