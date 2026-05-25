@@ -100,7 +100,8 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     \
         .dpi_clock_freq_mhz = 70,                        \
         .virtual_channel = 0,                            \
-        .pixel_format = px_format,                       \
+        .in_color_format = px_format,                       \
+        .out_color_format = px_format,                       \
         .num_fbs = 1,                                    \
         .video_timing = {                                \
             .h_size = 720,                               \
@@ -112,7 +113,6 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
             .vsync_pulse_width = 4,                      \
             .vsync_front_porch = 26,                     \
         },                                               \
-        .flags.use_dma2d = true,                         \
     }
 
 #define JD9365_800_1280_PANEL_60HZ_DPI_CONFIG(px_format) \
@@ -120,7 +120,8 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     \
         .dpi_clock_freq_mhz = 80,                        \
         .virtual_channel = 0,                            \
-        .pixel_format = px_format,                       \
+        .in_color_format = px_format,                       \
+        .out_color_format = px_format,                       \
         .num_fbs = 1,                                    \
         .video_timing = {                                \
             .h_size = 800,                               \
@@ -132,7 +133,6 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
             .vsync_pulse_width = 4,                      \
             .vsync_front_porch = 30,                     \
         },                                               \
-        .flags.use_dma2d = true,                         \
     }
 
 #define JD9365_800_800_PANEL_60HZ_DPI_CONFIG(px_format) \
@@ -140,7 +140,8 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     \
         .dpi_clock_freq_mhz = 80,                        \
         .virtual_channel = 0,                            \
-        .pixel_format = px_format,                       \
+        .in_color_format = px_format,                       \
+        .out_color_format = px_format,                       \
         .num_fbs = 1,                                    \
         .video_timing = {                                \
             .h_size = 800,                               \
@@ -152,7 +153,6 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
             .vsync_pulse_width = 4,                      \
             .vsync_front_porch = 24,                     \
         },                                               \
-        .flags.use_dma2d = true,                         \
     }
 
 #define JD9365_720_720_PANEL_60HZ_DPI_CONFIG(px_format) \
@@ -160,7 +160,8 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     \
         .dpi_clock_freq_mhz = 80,                        \
         .virtual_channel = 0,                            \
-        .pixel_format = px_format,                       \
+        .in_color_format = px_format,                       \
+        .out_color_format = px_format,                       \
         .num_fbs = 1,                                    \
         .video_timing = {                                \
             .h_size = 720,                               \
@@ -172,7 +173,6 @@ esp_err_t esp_lcd_new_panel_jd9365(const esp_lcd_panel_io_handle_t io, const esp
             .vsync_pulse_width = 4,                      \
             .vsync_front_porch = 24,                     \
         },                                               \
-        .flags.use_dma2d = true,                         \
     }
 #endif
 

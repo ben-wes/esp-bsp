@@ -49,8 +49,6 @@ static esp_err_t panel_hx8394_disp_on_off(esp_lcd_panel_t *panel, bool on_off);
 esp_err_t esp_lcd_new_panel_hx8394(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t *panel_dev_config,
                                    esp_lcd_panel_handle_t *ret_panel)
 {
-    ESP_LOGI(TAG, "version: %d.%d.%d", ESP_LCD_HX8394_VER_MAJOR, ESP_LCD_HX8394_VER_MINOR,
-             ESP_LCD_HX8394_VER_PATCH);
     ESP_RETURN_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, TAG, "invalid arguments");
     hx8394_vendor_config_t *vendor_config = (hx8394_vendor_config_t *)panel_dev_config->vendor_config;
     ESP_RETURN_ON_FALSE(vendor_config && vendor_config->mipi_config.dpi_config && vendor_config->mipi_config.dsi_bus, ESP_ERR_INVALID_ARG, TAG,
@@ -69,7 +67,7 @@ esp_err_t esp_lcd_new_panel_hx8394(const esp_lcd_panel_io_handle_t io, const esp
         ESP_GOTO_ON_ERROR(gpio_config(&io_conf), err, TAG, "configure GPIO for RST line failed");
     }
 
-    switch (panel_dev_config->color_space)
+    switch (panel_dev_config->rgb_ele_order)
     {
     case LCD_RGB_ELEMENT_ORDER_RGB:
         hx8394->madctl_val = 0;

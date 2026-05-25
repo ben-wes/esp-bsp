@@ -1,5 +1,5 @@
 if("${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}" VERSION_GREATER_EQUAL "5.3")
-    set(REQ esp_driver_gpio esp_driver_i2c esp_driver_i2s esp_driver_sdmmc)
+    set(REQ esp_driver_gpio esp_driver_i2c esp_driver_i2s esp_driver_sdmmc esp_driver_ledc)
     set(PRIV_REQ "")
 else()
     set(REQ driver)
@@ -8,6 +8,8 @@ endif()
 
 if(${IDF_VERSION_MAJOR} LESS 6)
     list(APPEND PRIV_REQ usb)
+else()
+    list(APPEND PRIV_REQ espressif__usb)
 endif()
 
 idf_component_register(

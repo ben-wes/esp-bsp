@@ -104,7 +104,8 @@ esp_err_t esp_lcd_new_panel_ili9881c(const esp_lcd_panel_io_handle_t io, const e
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,       \
         .dpi_clock_freq_mhz = 80,                          \
         .virtual_channel = 0,                              \
-        .pixel_format = px_format,                         \
+        .in_color_format = px_format,                       \
+        .out_color_format = px_format,                       \
         .num_fbs = 1,                                      \
         .video_timing = {                                  \
             .h_size = 720,                                 \
@@ -116,7 +117,6 @@ esp_err_t esp_lcd_new_panel_ili9881c(const esp_lcd_panel_io_handle_t io, const e
             .vsync_pulse_width = 30,                        \
             .vsync_front_porch = 2,                       \
         },                                                 \
-        .flags.use_dma2d = true,                           \
     }
 #endif
 

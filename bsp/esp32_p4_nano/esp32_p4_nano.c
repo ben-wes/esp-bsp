@@ -439,15 +439,15 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
     ESP_LOGI(TAG, "Install Waveshare LCD control panel");
 #if CONFIG_BSP_LCD_TYPE_720_1280_9_INCH_B || CONFIG_BSP_LCD_TYPE_720_1280_10_1_INCH_B
 #if CONFIG_BSP_LCD_COLOR_FORMAT_RGB888
-    esp_lcd_dpi_panel_config_t dpi_config = JD9365_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = JD9365_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB888);
 #else
-    esp_lcd_dpi_panel_config_t dpi_config = JD9365_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = JD9365_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB565);
 #endif
 #else
 #if CONFIG_BSP_LCD_COLOR_FORMAT_RGB888
-    esp_lcd_dpi_panel_config_t dpi_config = JD9365_800_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = JD9365_800_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB888);
 #else
-    esp_lcd_dpi_panel_config_t dpi_config = JD9365_800_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = JD9365_800_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB565);
 #endif
 #endif
     dpi_config.num_fbs = CONFIG_BSP_LCD_DPI_BUFFER_NUMS;
@@ -477,9 +477,9 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
     ESP_LOGI(TAG, "Install Waveshare 7-DSI-TOUCH-A LCD control panel");
 
 #if CONFIG_BSP_LCD_COLOR_FORMAT_RGB888
-    esp_lcd_dpi_panel_config_t dpi_config = ILI9881C_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = ILI9881C_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB888);
 #else
-    esp_lcd_dpi_panel_config_t dpi_config = ILI9881C_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = ILI9881C_720_1280_PANEL_60HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB565);
 #endif
     dpi_config.num_fbs = CONFIG_BSP_LCD_DPI_BUFFER_NUMS;
 
@@ -507,9 +507,9 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
 #elif CONFIG_BSP_LCD_TYPE_720_1280_5_INCH_A
     ESP_LOGI(TAG, "Install Waveshare 5-DSI-TOUCH-A LCD control panel");
 #if CONFIG_BSP_LCD_COLOR_FORMAT_RGB888
-    esp_lcd_dpi_panel_config_t dpi_config = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB888);
 #else
-    esp_lcd_dpi_panel_config_t dpi_config = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_FMT_RGB565);
 #endif
     dpi_config.num_fbs = CONFIG_BSP_LCD_DPI_BUFFER_NUMS;
 
@@ -538,64 +538,64 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
     ESP_LOGI(TAG, "Install Waveshare DSI LCD control panel");
 #if CONFIG_BSP_LCD_COLOR_FORMAT_RGB888
 #if CONFIG_BSP_LCD_TYPE_480_640_2_8_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_2_8_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_2_8_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_800_800_3_4_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_3_4_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_3_4_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_720_720_4_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_480_800_4_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_720_1280_5_INCH_D
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_D_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_D_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_720_1560_6_25_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_6_25_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_6_25_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_1024_600_5_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_1024_600_7_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_400_1280_7_9_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_9_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_9_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_7_INCH_E
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_E_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_E_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_8_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_10_1_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_10_1_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_10_1_INCH_C_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_480_1920_8_8_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_8_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_8_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #elif CONFIG_BSP_LCD_TYPE_320_1480_11_9_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_11_9_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB888);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_11_9_INCH_CONFIG(LCD_COLOR_FMT_RGB888);
 #endif
 
 #else
 #if CONFIG_BSP_LCD_TYPE_480_640_2_8_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_2_8_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_2_8_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_800_800_3_4_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_3_4_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_3_4_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_720_720_4_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_480_800_4_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_4_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_720_1280_5_INCH_D
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_D_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_D_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_720_1560_6_25_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_6_25_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_6_25_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_1024_600_5_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_5_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_1024_600_7_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_400_1280_7_9_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_9_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_9_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_7_INCH_E
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_E_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_7_INCH_E_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_8_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_1280_800_10_1_INCH_C
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_10_1_INCH_C_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_10_1_INCH_C_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_480_1920_8_8_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_8_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_8_8_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #elif CONFIG_BSP_LCD_TYPE_320_1480_11_9_INCH
-    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_11_9_INCH_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi_config = DSI_PANEL_DPI_11_9_INCH_CONFIG(LCD_COLOR_FMT_RGB565);
 #endif
 #endif
     dpi_config.num_fbs = CONFIG_BSP_LCD_DPI_BUFFER_NUMS;
@@ -806,7 +806,7 @@ lv_display_t *bsp_display_start(void)
 
 lv_display_t *bsp_display_start_with_config(const bsp_display_cfg_t *cfg)
 {
-    lv_display_t *disp;
+    lv_display_t *disp = NULL;
 
     assert(cfg != NULL);
     BSP_ERROR_CHECK_RETURN_NULL(lvgl_port_init(&cfg->lvgl_port_cfg));
