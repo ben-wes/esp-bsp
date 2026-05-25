@@ -1,0 +1,8 @@
+version: "1.0.3"
+targets:
+  - esp32p4
+description: ESP LCD HX8394 for Waveshare 5-inch DSI display
+url: https://github.com/espressif/esp-bsp/tree/master/components/lcd/esp_lcd_hx8394
+dependencies:
+  idf: ">=5.3"
+  espressif/i2c_bus: "^1.3.0"

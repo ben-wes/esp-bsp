@@ -37,6 +37,11 @@ menu "BSP Selector"
         default 1 if BSP_SELECT_ESP32_P4_FUNCTION_EV_BOARD
         default 0
 
+    config ESP32_P4_NANO
+        int
+        default 1 if BSP_SELECT_ESP32_P4_NANO
+        default 0
+
     config ESP32_S3_EYE
         int
         default 1 if BSP_SELECT_ESP32_S3_EYE
@@ -156,6 +161,10 @@ menu "BSP Selector"
         config BSP_SELECT_ESP32_P4_FUNCTION_EV_BOARD
             depends on IDF_TARGET_ESP32P4
             bool "ESP32_P4_FUNCTION_EV_BOARD"
+
+        config BSP_SELECT_ESP32_P4_NANO
+            depends on IDF_TARGET_ESP32P4
+            bool "ESP32_P4_NANO"
 
         config BSP_SELECT_ESP32_S3_EYE
             depends on IDF_TARGET_ESP32S3

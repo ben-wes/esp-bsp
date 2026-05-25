@@ -75,6 +75,19 @@ dependencies:
     matches:
       - if: $CONFIG{ESP32_P4_FUNCTION_EV_BOARD} == 1 && $CONFIG{BSP_SELECT_GLIB_SEL} != 1
 
+  esp32_p4_nano:
+    version: "*"
+    public: true
+    override_path: "../../bsp/esp32_p4_nano"
+    matches:
+      - if: $CONFIG{ESP32_P4_NANO} == 1 && $CONFIG{BSP_SELECT_GLIB_SEL} == 1
+
+  esp32_p4_nano_noglib:
+    version: "*"
+    public: true
+    matches:
+      - if: $CONFIG{ESP32_P4_NANO} == 1 && $CONFIG{BSP_SELECT_GLIB_SEL} != 1
+
   esp32_s3_eye:
     version: "*"
     public: true

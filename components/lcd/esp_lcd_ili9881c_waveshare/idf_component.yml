@@ -1,0 +1,8 @@
+version: "1.0.4"
+targets:
+  - esp32p4
+description: Waveshare 7-DSI-TOUCH-A ILI9881C driver (MIPI DSI)
+url: https://github.com/espressif/esp-bsp/tree/master/components/lcd/esp_lcd_ili9881c_waveshare
+dependencies:
+  idf: ">=5.3"
+  espressif/i2c_bus: "^1.3.0"
