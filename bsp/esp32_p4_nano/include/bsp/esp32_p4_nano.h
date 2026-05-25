@@ -26,6 +26,7 @@
 #define BSP_CAPS_AUDIO_SPEAKER  1
 #define BSP_CAPS_AUDIO_MIC      1
 #define BSP_CAPS_SDCARD         1
+#define BSP_SDCARD_HAS_GET_HANDLE 1
 #define BSP_CAPS_IMU            0
 
 /**************************************************************************************************
@@ -200,6 +201,8 @@ esp_err_t bsp_spiffs_unmount(void);
  **************************************************************************************************/
 #define BSP_SD_MOUNT_POINT      CONFIG_BSP_SD_MOUNT_POINT
 extern sdmmc_card_t *bsp_sdcard;
+
+sdmmc_card_t *bsp_sdcard_get_handle(void);
 
 /**
  * @brief Mount microSD card to virtual file system

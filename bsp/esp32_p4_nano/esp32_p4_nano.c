@@ -100,6 +100,11 @@ i2c_master_bus_handle_t bsp_i2c_get_handle(void)
     return i2c_handle;
 }
 
+sdmmc_card_t *bsp_sdcard_get_handle(void)
+{
+    return bsp_sdcard;
+}
+
 esp_err_t bsp_sdcard_mount(void)
 {
     const esp_vfs_fat_sdmmc_mount_config_t mount_config = {
