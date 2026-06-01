@@ -11,6 +11,15 @@
 #include "esp_vfs_fat.h"
 #include "usb/usb_host.h"
 #include "sd_pwr_ctrl_by_on_chip_ldo.h"
+#include "esp_idf_version.h"
+
+#if CONFIG_ESP_HOSTED_SDIO_HOST_INTERFACE && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0))
+#define WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT 1
+static esp_err_t sdmmc_host_init_dummy(void) { return ESP_OK; }
+static esp_err_t sdmmc_host_deinit_dummy(void) { return ESP_OK; }
+#else
+#define WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT 0
+#endif
 
 #if CONFIG_BSP_LCD_TYPE_800_1280_10_1_INCH || CONFIG_BSP_LCD_TYPE_800_1280_10_1_INCH_A || CONFIG_BSP_LCD_TYPE_800_1280_8_INCH_A ||CONFIG_BSP_LCD_TYPE_720_1280_9_INCH_B || CONFIG_BSP_LCD_TYPE_720_1280_10_1_INCH_B
 #include "esp_lcd_jd9365.h"
@@ -120,6 +129,10 @@ esp_err_t bsp_sdcard_mount(void)
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.slot = SDMMC_HOST_SLOT_0;
     host.max_freq_khz = SDMMC_FREQ_HIGHSPEED;
+#if WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT
+    host.init = &sdmmc_host_init_dummy;
+    host.deinit = &sdmmc_host_deinit_dummy;
+#endif
 
     sd_pwr_ctrl_ldo_config_t ldo_config = {
         .ldo_chan_id = 4,
