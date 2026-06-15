@@ -4,22 +4,11 @@
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_check.h"
-#include "esp_spiffs.h"
+#include "esp_idf_version.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_mipi_dsi.h"
 #include "esp_ldo_regulator.h"
-#include "esp_vfs_fat.h"
 #include "usb/usb_host.h"
-#include "sd_pwr_ctrl_by_on_chip_ldo.h"
-#include "esp_idf_version.h"
-
-#if CONFIG_ESP_HOSTED_SDIO_HOST_INTERFACE && (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0))
-#define WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT 1
-static esp_err_t sdmmc_host_init_dummy(void) { return ESP_OK; }
-static esp_err_t sdmmc_host_deinit_dummy(void) { return ESP_OK; }
-#else
-#define WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT 0
-#endif
 
 #if CONFIG_BSP_LCD_TYPE_800_1280_10_1_INCH || CONFIG_BSP_LCD_TYPE_800_1280_10_1_INCH_A || CONFIG_BSP_LCD_TYPE_800_1280_8_INCH_A ||CONFIG_BSP_LCD_TYPE_720_1280_9_INCH_B || CONFIG_BSP_LCD_TYPE_720_1280_10_1_INCH_B
 #include "esp_lcd_jd9365.h"
@@ -44,7 +33,6 @@ static const char *TAG = "ESP32_P4_EV";
 static lv_indev_t *disp_indev = NULL;
 #endif // (BSP_CONFIG_NO_GRAPHIC_LIB == 0)
 
-sdmmc_card_t *bsp_sdcard = NULL;    // Global uSD card handler
 static bool i2c_initialized = false;
 static TaskHandle_t usb_host_task;  // USB Host Library task
 #if (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 3, 0))
@@ -107,91 +95,6 @@ esp_err_t bsp_i2c_deinit(void)
 i2c_master_bus_handle_t bsp_i2c_get_handle(void)
 {
     return i2c_handle;
-}
-
-sdmmc_card_t *bsp_sdcard_get_handle(void)
-{
-    return bsp_sdcard;
-}
-
-esp_err_t bsp_sdcard_mount(void)
-{
-    const esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-#ifdef CONFIG_BSP_SD_FORMAT_ON_MOUNT_FAIL
-        .format_if_mount_failed = true,
-#else
-        .format_if_mount_failed = false,
-#endif
-        .max_files = 5,
-        .allocation_unit_size = 64 * 1024
-    };
-
-    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
-    host.slot = SDMMC_HOST_SLOT_0;
-    host.max_freq_khz = SDMMC_FREQ_HIGHSPEED;
-#if WORKAROUND_HOSTED_DOES_SDMMC_HOST_INIT
-    host.init = &sdmmc_host_init_dummy;
-    host.deinit = &sdmmc_host_deinit_dummy;
-#endif
-
-    sd_pwr_ctrl_ldo_config_t ldo_config = {
-        .ldo_chan_id = 4,
-    };
-    sd_pwr_ctrl_handle_t pwr_ctrl_handle = NULL;
-    esp_err_t ret = sd_pwr_ctrl_new_on_chip_ldo(&ldo_config, &pwr_ctrl_handle);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to create a new on-chip LDO power control driver");
-        return ret;
-    }
-    host.pwr_ctrl_handle = pwr_ctrl_handle;
-
-    const sdmmc_slot_config_t slot_config = {
-        /* SD card is connected to Slot 0 pins. Slot 0 uses IO MUX, so not specifying the pins here */
-        .cd = SDMMC_SLOT_NO_CD,
-        .wp = SDMMC_SLOT_NO_WP,
-        .width = 4,
-        .flags = 0,
-    };
-
-    return esp_vfs_fat_sdmmc_mount(BSP_SD_MOUNT_POINT, &host, &slot_config, &mount_config, &bsp_sdcard);
-}
-
-esp_err_t bsp_sdcard_unmount(void)
-{
-    return esp_vfs_fat_sdcard_unmount(BSP_SD_MOUNT_POINT, bsp_sdcard);
-}
-
-esp_err_t bsp_spiffs_mount(void)
-{
-    esp_vfs_spiffs_conf_t conf = {
-        .base_path = CONFIG_BSP_SPIFFS_MOUNT_POINT,
-        .partition_label = CONFIG_BSP_SPIFFS_PARTITION_LABEL,
-        .max_files = CONFIG_BSP_SPIFFS_MAX_FILES,
-#ifdef CONFIG_BSP_SPIFFS_FORMAT_ON_MOUNT_FAIL
-        .format_if_mount_failed = true,
-#else
-        .format_if_mount_failed = false,
-#endif
-    };
-
-    esp_err_t ret_val = esp_vfs_spiffs_register(&conf);
-
-    BSP_ERROR_CHECK_RETURN_ERR(ret_val);
-
-    size_t total = 0, used = 0;
-    ret_val = esp_spiffs_info(conf.partition_label, &total, &used);
-    if (ret_val != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get SPIFFS partition information (%s)", esp_err_to_name(ret_val));
-    } else {
-        ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
-    }
-
-    return ret_val;
-}
-
-esp_err_t bsp_spiffs_unmount(void)
-{
-    return esp_vfs_spiffs_unregister(CONFIG_BSP_SPIFFS_PARTITION_LABEL);
 }
 
 esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config)

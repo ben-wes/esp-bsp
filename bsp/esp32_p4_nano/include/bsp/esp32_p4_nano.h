@@ -4,6 +4,8 @@
 #include "driver/gpio.h"
 #include "driver/i2c_master.h"
 #include "driver/sdmmc_host.h"
+#include "driver/sdspi_host.h"
+#include "esp_vfs_fat.h"
 #include "driver/i2s_std.h"
 #include "bsp/config.h"
 #include "bsp/display.h"
@@ -202,7 +204,22 @@ esp_err_t bsp_spiffs_unmount(void);
 #define BSP_SD_MOUNT_POINT      CONFIG_BSP_SD_MOUNT_POINT
 extern sdmmc_card_t *bsp_sdcard;
 
+typedef struct {
+    const esp_vfs_fat_sdmmc_mount_config_t *mount;
+    sdmmc_host_t *host;
+    union {
+        const sdmmc_slot_config_t   *sdmmc;
+        const sdspi_device_config_t *sdspi;
+    } slot;
+} bsp_sdcard_cfg_t;
+
 sdmmc_card_t *bsp_sdcard_get_handle(void);
+void bsp_sdcard_get_sdmmc_host(const int slot, sdmmc_host_t *config);
+void bsp_sdcard_get_sdspi_host(const int slot, sdmmc_host_t *config);
+void bsp_sdcard_sdmmc_get_slot(const int slot, sdmmc_slot_config_t *config);
+void bsp_sdcard_sdspi_get_slot(const spi_host_device_t spi_host, sdspi_device_config_t *config);
+esp_err_t bsp_sdcard_sdmmc_mount(bsp_sdcard_cfg_t *cfg);
+esp_err_t bsp_sdcard_sdspi_mount(bsp_sdcard_cfg_t *cfg);
 
 /**
  * @brief Mount microSD card to virtual file system

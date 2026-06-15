@@ -13,7 +13,7 @@ else()
 endif()
 
 idf_component_register(
-    SRCS "esp32_p4_nano.c"
+    SRCS "esp32_p4_nano.c" "src/bsp_storage.c"
     INCLUDE_DIRS "include"
     PRIV_INCLUDE_DIRS "priv_include"
     REQUIRES ${REQ} fatfs vfs
