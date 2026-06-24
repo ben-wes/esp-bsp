@@ -5,6 +5,7 @@
 #include "driver/i2c_master.h"
 #include "driver/sdmmc_host.h"
 #include "driver/sdspi_host.h"
+#include "sd_pwr_ctrl_by_on_chip_ldo.h"
 #include "esp_vfs_fat.h"
 #include "driver/i2s_std.h"
 #include "bsp/config.h"
@@ -214,6 +215,18 @@ typedef struct {
 } bsp_sdcard_cfg_t;
 
 sdmmc_card_t *bsp_sdcard_get_handle(void);
+
+/**
+ * @brief Reuse an existing SDMMC on-chip LDO power control handle.
+ *
+ * On ESP32-P4 boards where VDD_SDMMC (LDO ch 4) is shared by the uSD slot and
+ * a co-processor SDIO link (e.g. ESP-Hosted on the C6), the host application
+ * may acquire the LDO before bsp_sdcard_mount(). Pass that handle here so the
+ * BSP does not try to acquire the channel again. Adopted handles are not
+ * released by bsp_sdcard_unmount().
+ */
+void bsp_sdcard_adopt_pwr_ctrl_handle(sd_pwr_ctrl_handle_t handle);
+
 void bsp_sdcard_get_sdmmc_host(const int slot, sdmmc_host_t *config);
 void bsp_sdcard_get_sdspi_host(const int slot, sdmmc_host_t *config);
 void bsp_sdcard_sdmmc_get_slot(const int slot, sdmmc_slot_config_t *config);

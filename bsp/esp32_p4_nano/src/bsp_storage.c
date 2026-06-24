@@ -32,6 +32,13 @@ static esp_err_t sdmmc_host_deinit_dummy(void)
 
 sdmmc_card_t *bsp_sdcard = NULL;
 static sd_pwr_ctrl_handle_t pwr_ctrl_handle = NULL;
+static bool pwr_ctrl_adopted;
+
+void bsp_sdcard_adopt_pwr_ctrl_handle(sd_pwr_ctrl_handle_t handle)
+{
+    pwr_ctrl_handle = handle;
+    pwr_ctrl_adopted = (handle != NULL);
+}
 
 esp_err_t bsp_spiffs_mount(void)
 {
@@ -146,15 +153,20 @@ esp_err_t bsp_sdcard_sdmmc_mount(bsp_sdcard_cfg_t *cfg)
     }
 
     if (!cfg->host->pwr_ctrl_handle) {
-        sd_pwr_ctrl_ldo_config_t ldo_config = {
-            .ldo_chan_id = 4,
-        };
-        esp_err_t ret = sd_pwr_ctrl_new_on_chip_ldo(&ldo_config, &pwr_ctrl_handle);
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to create a new on-chip LDO power control driver");
-            return ret;
+        if (pwr_ctrl_handle) {
+            cfg->host->pwr_ctrl_handle = pwr_ctrl_handle;
+        } else {
+            sd_pwr_ctrl_ldo_config_t ldo_config = {
+                .ldo_chan_id = 4,
+            };
+            esp_err_t ret = sd_pwr_ctrl_new_on_chip_ldo(&ldo_config, &pwr_ctrl_handle);
+            if (ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to create a new on-chip LDO power control driver");
+                return ret;
+            }
+            pwr_ctrl_adopted = false;
+            cfg->host->pwr_ctrl_handle = pwr_ctrl_handle;
         }
-        cfg->host->pwr_ctrl_handle = pwr_ctrl_handle;
     }
 
 #if !defined(CONFIG_FATFS_LONG_FILENAMES) || defined(CONFIG_FATFS_LFN_NONE)
@@ -181,7 +193,7 @@ esp_err_t bsp_sdcard_unmount(void)
 {
     esp_err_t ret = ESP_OK;
 
-    if (pwr_ctrl_handle) {
+    if (pwr_ctrl_handle && !pwr_ctrl_adopted) {
         ret |= sd_pwr_ctrl_del_on_chip_ldo(pwr_ctrl_handle);
         pwr_ctrl_handle = NULL;
     }
